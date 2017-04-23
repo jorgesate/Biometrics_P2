@@ -19,6 +19,15 @@ for file_name in files:
     #ret3, th3 = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
     adap = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
                                 cv2.THRESH_BINARY_INV, 5, 2)
+    
+    imageK = img.copy()
+    imageK = imageK.reshape((imageK.shape[0] * imageK.shape[1], 1))
+    clt = KMeans(max_iter=20, n_clusters=3, random_state=7)
+    clt.fit(imageK)
+    image = np.zeros_like(imageK)
+    indices = np.where(clt.labels_ == 1)
+    image[indices] = 255
+    dst = image.reshape(dst.shape[0], dst.shape[1], 1)
 
     kernel = np.ones((2, 2), np.uint8)
     prev = adap.copy()
